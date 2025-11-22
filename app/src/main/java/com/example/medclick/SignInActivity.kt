@@ -10,11 +10,13 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private val db by lazy { Firebase.firestore }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +32,7 @@ class SignInActivity : AppCompatActivity() {
         val signUpLink = findViewById<TextView>(R.id.tv_sign_up_link)
         val forgotPasswordLink = findViewById<TextView>(R.id.tv_forgot_password)
 
-        // --- Style the links to look clickable (ADD THIS) ---
+        // --- Style the links to look clickable ---
         setupLinkStyling()
 
         // --- Pre-fill email if passed from SignUpActivity ---
@@ -54,7 +56,8 @@ class SignInActivity : AppCompatActivity() {
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         Log.d("SignIn", "signInWithEmail:success")
-                        navigateToDashboard()
+                        // Fetch user role from Firestore and navigate to appropriate dashboard
+                        fetchUserRoleAndNavigate()
                     } else {
                         Log.w("SignIn", "signInWithEmail:failure", task.exception)
                         Toast.makeText(baseContext, "Authentication failed. Check your email and password.",
@@ -65,16 +68,61 @@ class SignInActivity : AppCompatActivity() {
 
         // --- 2. Sign Up Link Listener (Navigation) ---
         signUpLink.setOnClickListener {
-            // Navigate the user back to the Sign Up screen
             val intent = Intent(this, RoleSelectionActivity::class.java)
             startActivity(intent)
             finish()
         }
 
-        // --- 3. Forgot Password Link Listener (Placeholder) ---
+        // --- 3. Forgot Password Link Listener ---
         forgotPasswordLink.setOnClickListener {
-            Toast.makeText(this, "Forgot Password functionality coming soon.", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
         }
+    }
+
+    /**
+     * Fetches user role from Firestore and navigates to appropriate dashboard
+     */
+    private fun fetchUserRoleAndNavigate() {
+        val currentUser = auth.currentUser
+        currentUser?.let { user ->
+            db.collection("users")
+                .document(user.uid)
+                .get()
+                .addOnSuccessListener { document ->
+                    if (document.exists()) {
+                        val role = document.getString("role") ?: "General User"
+                        Log.d("SignIn", "User role: $role")
+                        navigateToDashboard(role)
+                    } else {
+                        Log.w("SignIn", "User document not found, using default role")
+                        navigateToDashboard("General User") // Default role
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.w("SignIn", "Error fetching user role", e)
+                    navigateToDashboard("General User") // Default role on error
+                }
+        } ?: run {
+            // If no user found, use default role
+            navigateToDashboard("General User")
+        }
+    }
+
+    /**
+     * Navigates to appropriate dashboard based on user role
+     */
+    private fun navigateToDashboard(role: String) {
+        val intent = when (role) {
+            "Service Provider" -> Intent(this, ProviderDashboardActivity::class.java)
+            "Admin" -> Intent(this, AdminDashboardActivity::class.java)
+            else -> Intent(this, UserDashboardActivity::class.java) // "General User" goes here
+        }.apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("USER_ROLE", role) // Pass role to dashboard
+        }
+        startActivity(intent)
+        finish()
     }
 
     /**
@@ -84,21 +132,10 @@ class SignInActivity : AppCompatActivity() {
         val signUpLink = findViewById<TextView>(R.id.tv_sign_up_link)
         val forgotPasswordLink = findViewById<TextView>(R.id.tv_forgot_password)
 
-        // Make both links underlined to look clickable
         signUpLink.paintFlags = signUpLink.paintFlags or android.graphics.Paint.UNDERLINE_TEXT_FLAG
         forgotPasswordLink.paintFlags = forgotPasswordLink.paintFlags or android.graphics.Paint.UNDERLINE_TEXT_FLAG
 
-        // Optional: Change color to make them stand out more
-        val purpleColor = android.graphics.Color.parseColor("#A084E8") // Your purple color
+        val purpleColor = android.graphics.Color.parseColor("#A084E8")
         forgotPasswordLink.setTextColor(purpleColor)
-
-    }
-
-    private fun navigateToDashboard() {
-        val intent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        startActivity(intent)
-        finish()
     }
 }

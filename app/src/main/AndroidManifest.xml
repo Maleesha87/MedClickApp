@@ -11,10 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MedClick">
-        <activity
-            android:name=".SignInActivity"
-            android:exported="false" />
-        <!-- Only SplashActivity should be exported since it's the launcher -->
+
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -24,7 +21,7 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity> <!-- Other activities should typically not be exported -->
+        </activity>
         <activity
             android:name=".OnboardingActivity"
             android:exported="false"
@@ -41,6 +38,36 @@
             android:name=".SignUpActivity"
             android:exported="false"
             android:theme="@style/Theme.MedClick" />
+        <activity
+            android:name=".SignInActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ResetSuccessActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="password"
+                    android:pathPrefix="/reset/success"
+                    android:scheme="medclick" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".AdminDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProviderDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UserDashboardActivity"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
             android:exported="false"
