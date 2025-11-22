@@ -120,7 +120,6 @@
         app:layout_constraintEnd_toEndOf="parent" />
 
     <!-- Sign Up Link -->
-    <!-- Sign Up Link -->
     <TextView
         android:id="@+id/tv_sign_up_link"
         android:layout_width="wrap_content"
