@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "992493608014",
+    "project_id": "medclick-1039f",
+    "storage_bucket": "medclick-1039f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992493608014:android:45a3a0d7b41e6470d0b71f",
+        "android_client_info": {
+          "package_name": "com.example.medclick"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAhZIEqthiX5FSgTrfCDbto8J4v5IP-bqs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
