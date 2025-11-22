@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:padding="32dp"
+    tools:context=".RoleSelectionActivity">
+
+    <!-- 1. Lottie Animation View - Top Section -->
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottie_illustration_role"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="20dp"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/selection"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/tv_header"
+        app:layout_constraintHeight_max="250dp"
+        app:layout_constraintWidth_max="250dp"
+        app:layout_constraintDimensionRatio="1:1" />
+
+    <!-- 2. Title - Bold and Black -->
+    <TextView
+        android:id="@+id/tv_header"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="How will you use MedClick?"
+        android:textAlignment="center"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/lottie_illustration_role"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 3. Subtitle - Gray Text -->
+    <TextView
+        android:id="@+id/tv_subheader"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Select the option that best describes you to tailor your experience."
+        android:textAlignment="center"
+        android:textColor="#555555"
+        android:textSize="16sp"
+        app:layout_constraintTop_toBottomOf="@+id/tv_header"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 4. Role 1: General User (Patient) - Primary Purple Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_general_user"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="48dp"
+        android:elevation="20dp"
+        android:translationZ="14dp"
+        android:text="General User"
+        android:textAlignment="viewStart"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:backgroundTint="#C4A7E0"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_user"
+        app:iconPadding="16dp"
+        app:iconTint="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@+id/tv_subheader"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 5. Role 2: Service Provider (Doctor/Clinic) - Primary Purple Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_service_provider"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:elevation="20dp"
+        android:translationZ="14dp"
+        android:text="Service Provider (Doctor/Clinic)"
+        android:textAlignment="viewStart"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:backgroundTint="#C4A7E0"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_provider"
+        app:iconPadding="16dp"
+        app:iconTint="@android:color/white"
+        app:layout_constraintTop_toBottomOf="@+id/btn_general_user"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- 6. Role 3: Admin - Outlined Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_admin"
+        android:layout_width="0dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="16dp"
+        android:elevation="20dp"
+        android:translationZ="14dp"
+        android:text="System Administrator"
+        android:textStyle="bold"
+        android:textAlignment="viewStart"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        app:backgroundTint="#C4A7E0"
+        app:cornerRadius="12dp"
+        app:icon="@drawable/ic_admin"
+        app:iconPadding="16dp"
+        app:iconTint="@android:color/white"
+        app:strokeColor="#C4A7E0"
+        app:strokeWidth="2dp"
+        app:layout_constraintTop_toBottomOf="@+id/btn_service_provider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
