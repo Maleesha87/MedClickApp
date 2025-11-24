@@ -17,23 +17,23 @@ class RoleSelectionActivity : AppCompatActivity() {
 
         btnGeneralUser.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
-            intent.putExtra("USER_ROLE", "General User")
+            intent.putExtra("USER_ROLE", "patient")
             startActivity(intent)
-            finish()
+            // Don't finish() so user can go back
         }
 
         btnServiceProvider.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
-            intent.putExtra("USER_ROLE", "Service Provider")
+            intent.putExtra("USER_ROLE", "provider")
             startActivity(intent)
-            finish()
+            // Don't finish() so user can go back
         }
 
         btnAdmin.setOnClickListener {
             val intent = Intent(this, SignUpActivity::class.java)
-            intent.putExtra("USER_ROLE", "Admin")
+            intent.putExtra("USER_ROLE", "admin")
             startActivity(intent)
-            finish()
+            // Don't finish() so user can go back
         }
     }
 }

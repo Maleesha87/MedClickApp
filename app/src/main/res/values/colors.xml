@@ -2,4 +2,25 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!-- Primary App Colors (Lavender/Purple Theme) -->
+    <color name="med_purple_light">#D6C2E6</color>
+    <color name="med_purple_dark">#9C27B0</color>
+
+    <!-- Neutral Colors -->
+    <color name="med_text_gray">#424242</color>
+    <color name="med_star_yellow">#FFC107</color>
+
+    <!-- Bottom Navigation Colors -->
+    <color name="nav_item_selected">@color/med_purple_dark</color>
+    <color name="nav_item_unselected">@color/med_text_gray</color>
+
+    <!-- Custom Colors based on the screenshot -->
+    <color name="med_dark_purple">#520163</color>
+    <color name="med_light_purple">#8a00a1</color>
+    <color name="med_light_gray">#F5F5F5</color>
+
+    <color name="med_green">#4CAF50</color>
+    <color name="med_red">#F44336</color>
+
 </resources>

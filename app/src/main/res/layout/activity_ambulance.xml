@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".AmbulanceActivity">
+
+    <!-- Scrollable Content Area -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/ambulance_scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <!-- 1. Top Bar & Title -->
+            <TextView
+                android:id="@+id/tv_ambulance_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Ambulance"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:gravity="center_horizontal"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+
+            <!-- 2. Ambulance Banner -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                android:backgroundTint="@color/med_purple_dark">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <!-- Left: Illustration -->
+                    <ImageView
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:contentDescription="Ambulance Tools Illustration"
+                        android:src="@drawable/ic_ambulance_tools_illustration" />
+
+                    <!-- Right: Text & Button -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ambulance tools"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
+                            android:textColor="@color/white" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Emergency Health Service in Sri Lanka"
+                            android:textSize="14sp"
+                            android:textColor="@color/white"
+                            android:layout_marginTop="4dp" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btn_read_more"
+                            android:layout_width="wrap_content"
+                            android:layout_height="40dp"
+                            android:text="READ MORE"
+                            android:textSize="12sp"
+                            app:cornerRadius="8dp"
+                            android:backgroundTint="@android:color/transparent"
+                            app:strokeColor="@color/white"
+                            app:strokeWidth="1dp"
+                            android:textColor="@color/white"
+                            android:layout_marginTop="8dp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- 3. Immediate Call Block -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/card_call_1990"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="2dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp"
+                    android:background="@color/med_light_gray">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Government Ambulance Service"
+                        android:textSize="14sp"
+                        android:textColor="@color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CALL-1990"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/med_purple_dark"
+                        android:layout_marginTop="4dp" />
+
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- 4. Specialized Services Grid -->
+            <GridLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:columnCount="2"
+                android:rowCount="2"
+                android:layout_margin="16dp"
+                android:columnOrderPreserved="true">
+
+                <!-- Book Ambulance -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_book_ambulance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+                    <LinearLayout style="@style/AmbulanceServiceCard"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:background="@color/white">
+
+                        <ImageView
+                            style="@style/AmbulanceServiceIcon"
+                            android:src="@drawable/ic_book_ambulance" />
+                        <TextView android:text="Book Ambulance" style="@style/AmbulanceServiceTitle" />
+                        <TextView android:text="Schedule Ambulance-Fast and easy Patient Transfer" style="@style/AmbulanceServiceSubtitle" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- 24h Ambulance -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_24h_ambulance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+                    <LinearLayout style="@style/AmbulanceServiceCard"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:background="@color/white">
+                        <ImageView android:src="@drawable/ic_24h_ambulance" style="@style/AmbulanceServiceIcon" />
+                        <TextView android:text="24h Ambulance" style="@style/AmbulanceServiceTitle" />
+                        <TextView android:text="Book an Ambulance Any Time Anywhere" style="@style/AmbulanceServiceSubtitle" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Bulk Ambulance -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_bulk_ambulance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+                    <LinearLayout style="@style/AmbulanceServiceCard"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:background="@color/white">
+
+                        <ImageView
+                            style="@style/AmbulanceServiceIcon"
+                            android:layout_width="83dp"
+                            android:src="@drawable/ic_bulk_ambulance" />
+                        <TextView android:text="Bulk Ambulance" style="@style/AmbulanceServiceTitle" />
+                        <TextView android:text="For Emergency Multiple Ambulance Needs" style="@style/AmbulanceServiceSubtitle" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Rent Ambulance -->
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_rent_ambulance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_columnWeight="1"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginBottom="16dp"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="2dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground">
+                    <LinearLayout style="@style/AmbulanceServiceCard"
+                        android:layout_height="match_parent"
+                        android:gravity="center_horizontal"
+                        android:background="@color/white">
+
+                        <ImageView
+                            style="@style/AmbulanceServiceIcon"
+                            android:src="@drawable/ic_rent_ambulance" />
+                        <TextView android:text="Rent Ambulance" style="@style/AmbulanceServiceTitle" />
+                        <TextView android:text="For Events,Transfer &amp; more" style="@style/AmbulanceServiceSubtitle" />
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+            </GridLayout>
+
+            <!-- 5. Book Ambulance Button (Below the four image containers) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_book_ambulance"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/med_purple_dark"
+                android:text="Book Ambulance Service"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                app:cornerRadius="12dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Navigation View -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

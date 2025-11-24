@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    tools:context=".HomeActivity">
+
+    <!-- Scrollable Content Area -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/main_scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="16dp">
+
+            <!-- 1. Top Bar & Title -->
+            <TextView
+                android:id="@+id/tv_home_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Home"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:gravity="center_horizontal"
+                android:paddingTop="16dp"
+                android:paddingBottom="8dp" />
+
+            <!-- 2. Integrated Search Bar (Visual match from previous response, hidden in the image, but useful for function) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:visibility="gone"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/et_search_placeholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Search for services or providers..."
+                    android:drawableStart="@drawable/ic_search"
+                    android:drawablePadding="8dp"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:maxLines="1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- 3. Health Banner (Replace source with your actual image resource) -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_health_priority_banner"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:contentDescription="Health Priority Banner" />
+
+            <!-- 4. What Do You Need? (Service Grid) -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="What do you need?"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="4"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginTop="8dp">
+
+                <!-- Ambulance -->
+                <!-- Note: The margins are now handled within the service item layout to ensure even spacing. -->
+                <include layout="@layout/item_home_service" android:id="@+id/service_ambulance_grid_item" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+                <!-- Doctor -->
+                <include layout="@layout/item_home_service" android:id="@+id/service_doctor_grid_item" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+                <!-- Hospitals -->
+                <include layout="@layout/item_home_service" android:id="@+id/service_hospital_grid_item" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+                <!-- Health Chat -->
+                <include layout="@layout/item_home_service" android:id="@+id/service_chat_grid_item" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+
+            <!-- 5. Top Doctors Section (RecyclerView) -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Top Doctors"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_top_doctors"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_provider_card" /> <!-- FIXED: Use generic card template -->
+
+            <!-- 6. Top Hospital Section (RecyclerView) -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Top Hospital"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="16dp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_top_hospitals"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/item_provider_card" /> <!-- FIXED: Use generic card template -->
+
+            <!-- 7. Call an Ambulance Button (Main One-Tap Call Action) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btn_call_ambulance_main"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:text="Call "
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                app:cornerRadius="12dp"
+                android:backgroundTint="@color/med_purple_dark"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="24dp" />
+
+
+            <!-- 8. Footer text -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Take care of your body\nYour health, our priority - always here for you."
+                android:textSize="14sp"
+                android:textColor="@color/med_text_gray"
+                android:gravity="center_horizontal"
+                android:paddingHorizontal="16dp"
+                android:paddingTop="24dp" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Navigation View -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:menu="@menu/bottom_nav_menu"
+        app:itemIconTint="@color/nav_item_color"
+        app:itemTextColor="@color/nav_item_color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

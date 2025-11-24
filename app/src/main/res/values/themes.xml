@@ -1,9 +1,52 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+    <!-- Base application theme. (This theme uses Material3) -->
     <style name="Base.Theme.MedClick" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <!-- Theme customizations for MedClick, inherited by Theme.MedClick -->
+        <!-- Set the primary color for the Material3 theme -->
+        <item name="colorPrimary">@color/med_dark_purple</item>
+        <!-- Add other Material3 attributes here if needed -->
     </style>
 
     <style name="Theme.MedClick" parent="Base.Theme.MedClick" />
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/med_dark_purple</item>
+        <item name="colorPrimaryDark">@color/med_dark_purple</item>
+        <item name="colorAccent">@color/med_light_purple</item>
+        <item name="android:windowBackground">@android:color/white</item>
+    </style>
+
+    <!-- Ambulance Service Card Layout Style -->
+    <style name="AmbulanceServiceCard">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <!-- Ambulance Service Icon Style (Black, as seen in screenshot) -->
+    <style name="AmbulanceServiceIcon">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+    </style>
+
+    <!-- Ambulance Service Title Style -->
+    <style name="AmbulanceServiceTitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginTop">8dp</item>
+    </style>
+
+    <!-- Ambulance Service Subtitle Style -->
+    <style name="AmbulanceServiceSubtitle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@color/med_text_gray</item>
+        <item name="android:layout_marginTop">4dp</item>
+    </style>
 </resources>

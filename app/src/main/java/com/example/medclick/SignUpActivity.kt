@@ -10,13 +10,13 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class SignUpActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private val db by lazy { Firebase.firestore }
+    private val database by lazy { Firebase.database }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,8 +25,8 @@ class SignUpActivity : AppCompatActivity() {
         // Initialize Firebase Auth
         auth = Firebase.auth
 
-        // Get the role passed from RoleSelectionActivity
-        val userRole = intent.getStringExtra("USER_ROLE") ?: "patient"
+        // Get the role passed from RoleSelectionActivity - convert to lowercase for consistency
+        val userRole = intent.getStringExtra("USER_ROLE")?.toLowerCase() ?: "patient"
         Log.d("SignUp", "User role: $userRole")
 
         // Get references for UI components
@@ -62,6 +62,10 @@ class SignUpActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Show loading state
+            signUpButton.isEnabled = false
+            signUpButton.text = "Creating Account..."
+
             // --- Firebase Sign-Up Implementation ---
             auth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
@@ -71,8 +75,8 @@ class SignUpActivity : AppCompatActivity() {
                         // Get the newly created user
                         val user = auth.currentUser
                         user?.let {
-                            // Create user document in Firestore
-                            createUserDocument(it.uid, email, fullName, userRole)
+                            // Create user data in Realtime Database
+                            createUserInDatabase(it.uid, email, fullName, userRole)
                         }
                     } else {
                         // Handle specific errors
@@ -88,6 +92,9 @@ class SignUpActivity : AppCompatActivity() {
                                     Toast.LENGTH_LONG).show()
                             }
                         }
+                        // Reset button state on failure
+                        signUpButton.isEnabled = true
+                        signUpButton.text = "Sign Up"
                     }
                 }
         }
@@ -110,46 +117,71 @@ class SignUpActivity : AppCompatActivity() {
     }
 
     /**
-     * Creates a user document in Firestore after successful authentication
+     * Creates a user document in Realtime Database after successful authentication
      */
-    private fun createUserDocument(userId: String, email: String, fullName: String, role: String) {
+    private fun createUserInDatabase(userId: String, email: String, fullName: String, role: String) {
         val userData = hashMapOf(
             "email" to email,
             "fullName" to fullName,
             "role" to role,
-            "createdAt" to com.google.firebase.Timestamp.now(),
+            "createdAt" to System.currentTimeMillis(),
             "profileCompleted" to false,
             "phoneNumber" to "",
             "dateOfBirth" to "",
             "address" to ""
         )
 
-        db.collection("users")
-            .document(userId)
-            .set(userData)
+        // Add role-specific fields
+        when (role) {
+            "provider" -> {
+                userData["serviceType"] = "Ambulance Service"
+                userData["status"] = "pending" // Provider approval status
+            }
+            "admin" -> {
+                userData["adminLevel"] = "super_admin"
+            }
+        }
+
+        val usersRef = database.getReference("users").child(userId)
+        usersRef.setValue(userData)
             .addOnSuccessListener {
-                Log.d("Firestore", "User document created successfully")
-                // Show success dialog after Firestore document is created
-                showSuccessDialog(email)
+                Log.d("RealtimeDB", "User data created successfully")
+                // Show success dialog after data is saved
+                showSuccessDialog(email, role)
             }
             .addOnFailureListener { e ->
-                Log.w("Firestore", "Error creating user document", e)
-                // Even if Firestore fails, the user is authenticated, so show success
+                Log.w("RealtimeDB", "Error creating user data", e)
+                // Even if database fails, the user is authenticated, so show success
                 Toast.makeText(this, "Account created but there was an issue saving profile data", Toast.LENGTH_LONG).show()
-                showSuccessDialog(email)
+                showSuccessDialog(email, role)
             }
     }
 
     /**
      * Shows the custom success dialog.
      */
-    private fun showSuccessDialog(email: String) {
+    private fun showSuccessDialog(email: String, role: String) {
         val dialog = SuccessDialog(this) {
-            // This is the action that runs when the "Welcome" button is clicked
-            // Navigate to SignInActivity after successful registration
-            navigateToSignIn(email)
+            // Navigate to appropriate dashboard based on role
+            navigateToDashboard(role, email)
         }
         dialog.show()
+    }
+
+    /**
+     * Navigates to appropriate dashboard based on role
+     */
+    private fun navigateToDashboard(role: String, email: String) {
+        val intent = when (role) {
+            "provider" -> Intent(this, ProviderDashboardActivity::class.java)
+            "admin" -> Intent(this, AdminDashboardActivity::class.java)
+            else -> Intent(this, HomeActivity::class.java) // patient
+        }.apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("USER_EMAIL", email)
+        }
+        startActivity(intent)
+        finish()
     }
 
     /**
@@ -161,9 +193,9 @@ class SignUpActivity : AppCompatActivity() {
             if (email.isNotEmpty()) {
                 putExtra("EMAIL", email)
             }
-            flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK
+            // Don't clear tasks so user can go back
         }
         startActivity(intent)
-        finish()
+        // Don't finish() so user can go back to role selection
     }
 }

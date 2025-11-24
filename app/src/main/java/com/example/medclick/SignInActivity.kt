@@ -10,13 +10,16 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
-    private val db by lazy { Firebase.firestore }
+    private val database by lazy { Firebase.database }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,17 +54,24 @@ class SignInActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Show loading state
+            signInButton.isEnabled = false
+            signInButton.text = "Signing In..."
+
             // Perform Firebase sign-in
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         Log.d("SignIn", "signInWithEmail:success")
-                        // Fetch user role from Firestore and navigate to appropriate dashboard
+                        // Fetch user role from Realtime Database and navigate to appropriate dashboard
                         fetchUserRoleAndNavigate()
                     } else {
                         Log.w("SignIn", "signInWithEmail:failure", task.exception)
                         Toast.makeText(baseContext, "Authentication failed. Check your email and password.",
                             Toast.LENGTH_LONG).show()
+                        // Reset button state
+                        signInButton.isEnabled = true
+                        signInButton.text = "Sign In"
                     }
                 }
         }
@@ -70,7 +80,7 @@ class SignInActivity : AppCompatActivity() {
         signUpLink.setOnClickListener {
             val intent = Intent(this, RoleSelectionActivity::class.java)
             startActivity(intent)
-            finish()
+            // Don't finish() so user can come back to sign in
         }
 
         // --- 3. Forgot Password Link Listener ---
@@ -81,31 +91,33 @@ class SignInActivity : AppCompatActivity() {
     }
 
     /**
-     * Fetches user role from Firestore and navigates to appropriate dashboard
+     * Fetches user role from Realtime Database and navigates to appropriate dashboard
      */
     private fun fetchUserRoleAndNavigate() {
         val currentUser = auth.currentUser
         currentUser?.let { user ->
-            db.collection("users")
-                .document(user.uid)
-                .get()
-                .addOnSuccessListener { document ->
-                    if (document.exists()) {
-                        val role = document.getString("role") ?: "General User"
+            val userRef = database.getReference("users").child(user.uid)
+
+            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val role = snapshot.child("role").getValue(String::class.java) ?: "patient"
                         Log.d("SignIn", "User role: $role")
                         navigateToDashboard(role)
                     } else {
-                        Log.w("SignIn", "User document not found, using default role")
-                        navigateToDashboard("General User") // Default role
+                        Log.w("SignIn", "User data not found, using default role")
+                        navigateToDashboard("patient") // Default role
                     }
                 }
-                .addOnFailureListener { e ->
-                    Log.w("SignIn", "Error fetching user role", e)
-                    navigateToDashboard("General User") // Default role on error
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w("SignIn", "Error fetching user role", error.toException())
+                    navigateToDashboard("patient") // Default role on error
                 }
+            })
         } ?: run {
             // If no user found, use default role
-            navigateToDashboard("General User")
+            navigateToDashboard("patient")
         }
     }
 
@@ -113,13 +125,12 @@ class SignInActivity : AppCompatActivity() {
      * Navigates to appropriate dashboard based on user role
      */
     private fun navigateToDashboard(role: String) {
-        val intent = when (role) {
-            "Service Provider" -> Intent(this, ProviderDashboardActivity::class.java)
-            "Admin" -> Intent(this, AdminDashboardActivity::class.java)
-            else -> Intent(this, UserDashboardActivity::class.java) // "General User" goes here
+        val intent = when (role.toLowerCase()) {
+            "provider", "service provider" -> Intent(this, ProviderDashboardActivity::class.java)
+            "admin" -> Intent(this, AdminDashboardActivity::class.java)
+            else -> Intent(this, HomeActivity::class.java) // patient or general user
         }.apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            putExtra("USER_ROLE", role) // Pass role to dashboard
         }
         startActivity(intent)
         finish()
