@@ -10,11 +10,16 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputEditText
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
 
 class SignInActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private val database by lazy { Firebase.database }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,7 +35,7 @@ class SignInActivity : AppCompatActivity() {
         val signUpLink = findViewById<TextView>(R.id.tv_sign_up_link)
         val forgotPasswordLink = findViewById<TextView>(R.id.tv_forgot_password)
 
-        // --- Style the links to look clickable (ADD THIS) ---
+        // --- Style the links to look clickable ---
         setupLinkStyling()
 
         // --- Pre-fill email if passed from SignUpActivity ---
@@ -49,32 +54,86 @@ class SignInActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Show loading state
+            signInButton.isEnabled = false
+            signInButton.text = "Signing In..."
+
             // Perform Firebase sign-in
             auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this) { task ->
                     if (task.isSuccessful) {
                         Log.d("SignIn", "signInWithEmail:success")
-                        navigateToDashboard()
+                        // Fetch user role from Realtime Database and navigate to appropriate dashboard
+                        fetchUserRoleAndNavigate()
                     } else {
                         Log.w("SignIn", "signInWithEmail:failure", task.exception)
                         Toast.makeText(baseContext, "Authentication failed. Check your email and password.",
                             Toast.LENGTH_LONG).show()
+                        // Reset button state
+                        signInButton.isEnabled = true
+                        signInButton.text = "Sign In"
                     }
                 }
         }
 
         // --- 2. Sign Up Link Listener (Navigation) ---
         signUpLink.setOnClickListener {
-            // Navigate the user back to the Sign Up screen
             val intent = Intent(this, RoleSelectionActivity::class.java)
             startActivity(intent)
-            finish()
+            // Don't finish() so user can come back to sign in
         }
 
-        // --- 3. Forgot Password Link Listener (Placeholder) ---
+        // --- 3. Forgot Password Link Listener ---
         forgotPasswordLink.setOnClickListener {
-            Toast.makeText(this, "Forgot Password functionality coming soon.", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, ForgotPasswordActivity::class.java)
+            startActivity(intent)
         }
+    }
+
+    /**
+     * Fetches user role from Realtime Database and navigates to appropriate dashboard
+     */
+    private fun fetchUserRoleAndNavigate() {
+        val currentUser = auth.currentUser
+        currentUser?.let { user ->
+            val userRef = database.getReference("users").child(user.uid)
+
+            userRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        val role = snapshot.child("role").getValue(String::class.java) ?: "patient"
+                        Log.d("SignIn", "User role: $role")
+                        navigateToDashboard(role)
+                    } else {
+                        Log.w("SignIn", "User data not found, using default role")
+                        navigateToDashboard("patient") // Default role
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Log.w("SignIn", "Error fetching user role", error.toException())
+                    navigateToDashboard("patient") // Default role on error
+                }
+            })
+        } ?: run {
+            // If no user found, use default role
+            navigateToDashboard("patient")
+        }
+    }
+
+    /**
+     * Navigates to appropriate dashboard based on user role
+     */
+    private fun navigateToDashboard(role: String) {
+        val intent = when (role.toLowerCase()) {
+            "provider", "service provider" -> Intent(this, ProviderDashboardActivity::class.java)
+            "admin" -> Intent(this, AdminDashboardActivity::class.java)
+            else -> Intent(this, HomeActivity::class.java) // patient or general user
+        }.apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        }
+        startActivity(intent)
+        finish()
     }
 
     /**
@@ -84,21 +143,10 @@ class SignInActivity : AppCompatActivity() {
         val signUpLink = findViewById<TextView>(R.id.tv_sign_up_link)
         val forgotPasswordLink = findViewById<TextView>(R.id.tv_forgot_password)
 
-        // Make both links underlined to look clickable
         signUpLink.paintFlags = signUpLink.paintFlags or android.graphics.Paint.UNDERLINE_TEXT_FLAG
         forgotPasswordLink.paintFlags = forgotPasswordLink.paintFlags or android.graphics.Paint.UNDERLINE_TEXT_FLAG
 
-        // Optional: Change color to make them stand out more
-        val purpleColor = android.graphics.Color.parseColor("#A084E8") // Your purple color
+        val purpleColor = android.graphics.Color.parseColor("#A084E8")
         forgotPasswordLink.setTextColor(purpleColor)
-
-    }
-
-    private fun navigateToDashboard() {
-        val intent = Intent(this, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-        startActivity(intent)
-        finish()
     }
 }

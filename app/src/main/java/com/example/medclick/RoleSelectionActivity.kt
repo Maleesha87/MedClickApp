@@ -16,24 +16,24 @@ class RoleSelectionActivity : AppCompatActivity() {
         val btnAdmin = findViewById<MaterialButton>(R.id.btn_admin)
 
         btnGeneralUser.setOnClickListener {
-            // Navigate to General User (Patient) Dashboard
             val intent = Intent(this, SignUpActivity::class.java)
+            intent.putExtra("USER_ROLE", "patient")
             startActivity(intent)
-            finish()
+            // Don't finish() so user can go back
         }
 
         btnServiceProvider.setOnClickListener {
-            // Navigate to Service Provider Dashboard
             val intent = Intent(this, SignUpActivity::class.java)
+            intent.putExtra("USER_ROLE", "provider")
             startActivity(intent)
-            finish()
+            // Don't finish() so user can go back
         }
 
         btnAdmin.setOnClickListener {
-            // Navigate to Admin Dashboard
             val intent = Intent(this, SignUpActivity::class.java)
+            intent.putExtra("USER_ROLE", "admin")
             startActivity(intent)
-            finish()
+            // Don't finish() so user can go back
         }
     }
 }

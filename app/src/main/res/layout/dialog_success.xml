@@ -56,7 +56,7 @@
             android:id="@+id/btn_welcome"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:text="Welcome"
+            android:text="Start Journey"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="18sp"
