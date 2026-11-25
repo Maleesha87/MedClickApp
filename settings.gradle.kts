@@ -19,5 +19,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MedClickApp"
+rootProject.name = "MedClick"
 include(":app")
+ 

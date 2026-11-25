@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_provider"
+    android:layout_width="160dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="12dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:paddingBottom="12dp">
+
+        <!-- Top Section for Image (100dp high) -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="100dp">
+
+            <ImageView
+                android:id="@+id/iv_provider_photo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_doctor_placeholder"
+                android:scaleType="centerCrop"
+                android:background="@color/med_purple_light"
+                android:contentDescription="Provider Photo" />
+
+            <ImageView
+                android:id="@+id/iv_heart_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="top|end"
+                android:layout_margin="8dp"
+                android:src="@drawable/ic_heart_outline"
+                android:contentDescription="Favorite"
+                app:tint="@color/white" />
+        </FrameLayout>
+
+
+        <!-- Text/Details Section -->
+        <TextView
+            android:id="@+id/tv_provider_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:layout_marginTop="8dp"
+            android:text="Provider Name/Title"
+            android:maxLines="1"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_provider_specialty_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:text="Specialty or Location"
+            android:textColor="@color/med_text_gray"
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@drawable/ic_star"
+                android:contentDescription="Rating Star"
+                app:tint="@color/med_star_yellow" />
+
+            <TextView
+                android:id="@+id/tv_provider_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="4.8"
+                android:textColor="@color/med_text_gray"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
